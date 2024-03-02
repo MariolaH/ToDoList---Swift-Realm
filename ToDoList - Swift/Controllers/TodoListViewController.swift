@@ -10,14 +10,16 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    let defaults = UserDefaults.standard
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Find Mike"
-        newItem.done = true
         itemArray.append(newItem)
         
         
@@ -31,7 +33,7 @@ class TodoListViewController: UITableViewController {
 
     
         
-//        if let items  = defaults.array(forKey: "ToDoListArray") as? [String] {
+//        if let items  = defaults.array(forKey: "ToDoListArray") as? [Item] {
 //            itemArray = items
 //        }
     }
@@ -56,14 +58,7 @@ class TodoListViewController: UITableViewController {
         //value = condition ? valueIfTrue : valueIfFalse
         
         cell.accessoryType = item.done ? .checkmark : .none
-      
-        //this is essentially the same thing
-        
-//        if item.done == true {
-//            cell.accessoryType = .checkmark
-//        } else {
-//            cell.accessoryType = .none
-//        }
+
         
         return cell
     }
@@ -111,7 +106,13 @@ class TodoListViewController: UITableViewController {
             newItem.title = textField.text!
             self.itemArray.append(newItem)
             //tableView.reloadData() - reloads the rows and the section of the tabeView, taking into account the new data that has been added to the itemArray
-            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            let encoder = PropertyListEncoder()
+            do {
+                let data = try encoder.encode(self.itemArray)
+                try data.write(to: self.dataFilePath ?? <#default value#>)
+            } catch {
+                print("Error encoding item array, \(error)")
+            }
             self.tableView.reloadData()
         }
         
@@ -121,7 +122,6 @@ class TodoListViewController: UITableViewController {
         }
         
             alert.addAction(action)
-        
             present(alert, animated: true, completion: nil)
     }
 }

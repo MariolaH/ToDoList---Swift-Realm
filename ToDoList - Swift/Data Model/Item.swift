@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class Item {
+class Item: Encodable {
     
     var title: String = ""
     var done: Bool = false 
