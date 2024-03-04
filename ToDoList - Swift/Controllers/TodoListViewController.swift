@@ -15,22 +15,21 @@ class TodoListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
 //        print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Find Mike"
         itemArray.append(newItem)
         
-        
         let newItem2 = Item()
-        newItem2.title = "Find Bob"
+        newItem2.title = "Find Mike"
         itemArray.append(newItem2)
         
         let newItem3 = Item()
-        newItem3.title = "Find Smith"
+        newItem3.title = "Find Mike"
         itemArray.append(newItem3)
-
+        
     
         
 //        if let items  = defaults.array(forKey: "ToDoListArray") as? [Item] {
@@ -66,8 +65,14 @@ class TodoListViewController: UITableViewController {
         
         //sets the done property on the current item in the itemArray to the opposite of what it is right now.
         //if it's true it becomes false. If it's false, it becomes true. All done by using the NOT(!) operator
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
 
+//        if itemArray[indexPath.row].done == false {
+//            itemArray[indexPath.row].done = true
+//        } else { itemArray[indexPath.row].done = false
+//        }
+        
         //this forces the table view to call its Datasource Method again, so that it reloads the data that's meant to be inside
         tableView.reloadData()
         
@@ -75,15 +80,7 @@ class TodoListViewController: UITableViewController {
         //        print("Selected Row:  \(indexPath.row)")
         //Prints what is written in that row
         //        print("Selected Row:  \(itemArray[indexPath.row])")
-        //if the tableview's current cell at the current selected indexPath already has an an accessory that is a checkmark
-        //check to see if the current cell that is selected has an accessoryType of checkmark
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            // if it does, change it to none to remove the checkmark
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            //otherwise if it doesn't have a checkmark, and we selected it, then its going to add a checkmark
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -101,12 +98,13 @@ class TodoListViewController: UITableViewController {
             //add whatever user wrote in the textField to the itemArray
             let newItem = Item()
             newItem.title = textField.text!
+            
             self.itemArray.append(newItem)
             //tableView.reloadData() - reloads the rows and the section of the tabeView, taking into account the new data that has been added to the itemArray
             let encoder = PropertyListEncoder()
             do {
                 let data = try encoder.encode(self.itemArray)
-                try data.write(to: self.dataFilePath ?? <#default value#>)
+                try data.write(to: self.dataFilePath!)
             } catch {
                 print("Error encoding item array, \(error)")
             }
