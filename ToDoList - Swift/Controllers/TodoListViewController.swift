@@ -16,7 +16,7 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print(dataFilePath)
+//        print(dataFilePath)
         
         let newItem = Item()
         newItem.title = "Find Mike"
@@ -56,10 +56,7 @@ class TodoListViewController: UITableViewController {
         cell.textLabel?.text = item.title
         
         //value = condition ? valueIfTrue : valueIfFalse
-        
         cell.accessoryType = item.done ? .checkmark : .none
-
-        
         return cell
     }
     
@@ -100,7 +97,7 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New ToDo Item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            //What will happen once the user clicks the add item button on theh UIAlert
+            //What will happen once the user clicks the add item button on this UIAlert
             //add whatever user wrote in the textField to the itemArray
             let newItem = Item()
             newItem.title = textField.text!
