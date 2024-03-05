@@ -67,14 +67,13 @@ class TodoListViewController: UITableViewController {
         //if it's true it becomes false. If it's false, it becomes true. All done by using the NOT(!) operator
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
+        savedItems()
 
 //        if itemArray[indexPath.row].done == false {
 //            itemArray[indexPath.row].done = true
 //        } else { itemArray[indexPath.row].done = false
 //        }
-        
-        //this forces the table view to call its Datasource Method again, so that it reloads the data that's meant to be inside
-        tableView.reloadData()
         
         //This just prints the number of the row that is selected
         //        print("Selected Row:  \(indexPath.row)")
@@ -101,14 +100,9 @@ class TodoListViewController: UITableViewController {
             
             self.itemArray.append(newItem)
             //tableView.reloadData() - reloads the rows and the section of the tabeView, taking into account the new data that has been added to the itemArray
-            let encoder = PropertyListEncoder()
-            do {
-                let data = try encoder.encode(self.itemArray)
-                try data.write(to: self.dataFilePath!)
-            } catch {
-                print("Error encoding item array, \(error)")
-            }
-            self.tableView.reloadData()
+            
+            self.savedItems()
+            
         }
         
         alert.addTextField { (alertTextField) in
@@ -118,6 +112,20 @@ class TodoListViewController: UITableViewController {
         
             alert.addAction(action)
             present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK - Model Manipulation Methods
+    
+    func savedItems() {
+        
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding item array, \(error)")
+        }
+        self.tableView.reloadData()
     }
 }
 
