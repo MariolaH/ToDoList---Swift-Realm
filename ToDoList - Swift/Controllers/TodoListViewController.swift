@@ -116,6 +116,7 @@ class TodoListViewController: UITableViewController {
     
     //MARK - Model Manipulation Methods
     
+    //This function, savedItems(), is responsible for encoding an array of items (data model) and saving it to a file using Property List serialization.
     func savedItems() {
         
         let encoder = PropertyListEncoder()
