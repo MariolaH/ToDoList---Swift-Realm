@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-class Item: Encodable {
+//Codable means - specifies that a particular class and all of their objects conform to both the encodable and decodable protocols
+class Item: Codable {
     
     var title: String = ""
     var done: Bool = false 
