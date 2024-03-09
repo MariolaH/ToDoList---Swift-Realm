@@ -113,6 +113,8 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    // this function is responsible for loading an array of Item objects from a file specified by dataFilePath, decoding the data, and storing it in the itemArray property
+    
     func loadItems() {
         if let data = try? Data(contentsOf: dataFilePath!) {
             let decoder = PropertyListDecoder()
