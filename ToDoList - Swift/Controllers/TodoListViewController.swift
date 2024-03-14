@@ -16,8 +16,7 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        loadItems()
-        
+        loadItems()   
     }
     
     //MARK - Tableview Datasource Methods
@@ -85,7 +84,6 @@ class TodoListViewController: UITableViewController {
             //tableView.reloadData() - reloads the rows and the section of the tabeView, taking into account the new data that has been added to the itemArray
             
             self.savedItems()
-            
         }
         
         alert.addTextField { (alertTextField) in
