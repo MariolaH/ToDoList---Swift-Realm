@@ -77,7 +77,8 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //What will happen once the user clicks the add item button on this UIAlert
             //add whatever user wrote in the textField to the itemArray
-            let newItem = Item()
+            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            let newItem = Item(context: context)
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
@@ -101,12 +102,10 @@ class TodoListViewController: UITableViewController {
     
     func savedItems() {
         
-        let encoder = PropertyListEncoder()
         do {
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+
         } catch {
-            print("Error encoding item array, \(error)")
+
         }
         self.tableView.reloadData()
     }
