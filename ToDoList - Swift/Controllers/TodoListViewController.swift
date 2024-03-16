@@ -6,17 +6,18 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
-     
-        loadItems()   
+        
+//        loadItems()
     }
     
     //MARK - Tableview Datasource Methods
@@ -51,11 +52,11 @@ class TodoListViewController: UITableViewController {
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         savedItems()
-
-//        if itemArray[indexPath.row].done == false {
-//            itemArray[indexPath.row].done = true
-//        } else { itemArray[indexPath.row].done = false
-//        }
+        
+        //        if itemArray[indexPath.row].done == false {
+        //            itemArray[indexPath.row].done = true
+        //        } else { itemArray[indexPath.row].done = false
+        //        }
         
         //This just prints the number of the row that is selected
         //        print("Selected Row:  \(indexPath.row)")
@@ -77,10 +78,9 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //What will happen once the user clicks the add item button on this UIAlert
             //add whatever user wrote in the textField to the itemArray
-            let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-            let newItem = Item(context: context)
+            let newItem = Item(context: self.context)
             newItem.title = textField.text!
-            
+            newItem.done = false
             self.itemArray.append(newItem)
             //tableView.reloadData() - reloads the rows and the section of the tabeView, taking into account the new data that has been added to the itemArray
             
@@ -92,8 +92,8 @@ class TodoListViewController: UITableViewController {
             textField = alertTextField
         }
         
-            alert.addAction(action)
-            present(alert, animated: true, completion: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
     
     //MARK - Model Manipulation Methods
@@ -103,24 +103,24 @@ class TodoListViewController: UITableViewController {
     func savedItems() {
         
         do {
-
+            try context.save()
         } catch {
-
+            print("Error printing context \(error)")
         }
         self.tableView.reloadData()
     }
     
     // this function is responsible for loading an array of Item objects from a file specified by dataFilePath, decoding the data, and storing it in the itemArray property
     
-    func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Error decoding item array, \(error)")
-            }
-        }
-    }
+//    func loadItems() {
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decoder = PropertyListDecoder()
+//            do {
+//                itemArray = try decoder.decode([Item].self, from: data)
+//            } catch {
+//                print("Error decoding item array, \(error)")
+//            }
+//        }
+//    }
 }
 
