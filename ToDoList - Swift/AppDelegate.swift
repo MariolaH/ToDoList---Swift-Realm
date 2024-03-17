@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        //Point where basically the app is going to be terminate. User or system triggered
+        self.saveContext()
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
