@@ -138,4 +138,16 @@ extension TodoListViewController: UISearchBarDelegate {
         //run the request and fetch the results
         loadItems(with: request)
     }
+    
+    //
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                //this line of code refers to is that is should no longer be the things that is currently selected,so no longer have the cursor and also the keyboard should go away because we are no longer editing it anymore
+                    //Go back to the background, go to the original state you're in before you are activated
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
 }
