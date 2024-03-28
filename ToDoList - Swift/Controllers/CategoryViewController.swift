@@ -9,12 +9,12 @@ import UIKit
 import CoreData
 
 class CategoryViewController: UITableViewController {
-
+    
     var categoryArray = ["Category", "Cat"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        loadCategory()
     }
     
     //MARK: - TableView Datasource Methods
@@ -31,8 +31,16 @@ class CategoryViewController: UITableViewController {
     
     //MARK: - Data Manipulation Methods
     
+    func saveCategory() {
+        
+    }
+    
+    func loadCategory() {
+        
+    }
+    
     //MARK: - Add New Categories
-
+    
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
