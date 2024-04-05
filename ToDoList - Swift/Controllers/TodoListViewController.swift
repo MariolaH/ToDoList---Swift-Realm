@@ -56,9 +56,18 @@ class TodoListViewController: UITableViewController {
     //MARK: - TableView Delegate Methods
     // fired whenever we click on any cell in the tableview
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let item = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("Error saving done status, \(error)")
+            }
+        }
         
         
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.reloadData()
     }
     
     //MARK: - Add New Items
@@ -86,7 +95,7 @@ class TodoListViewController: UITableViewController {
             }
             self.tableView.reloadData()
         }
-    
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create New Item"
             textField = alertTextField
