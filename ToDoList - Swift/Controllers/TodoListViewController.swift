@@ -24,6 +24,7 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        title = "To Do List"
     }
     
     //MARK: - Tableview Datasource Methods
@@ -78,7 +79,7 @@ class TodoListViewController: UITableViewController {
                         realm.delete(item)
                     }
                 } catch {
-                    print("Erroe deleting, \(error)")
+                    print("Error deleting, \(error)")
                 }
             }
             tableView.reloadData()
@@ -102,6 +103,7 @@ class TodoListViewController: UITableViewController {
                     try self.realm.write {
                         let newItem = Item()
                         newItem.title = textField.text!
+                        newItem.dateCreated = Date()
                         currentCategory.items.append(newItem)
                     }
                 } catch {
@@ -135,29 +137,20 @@ class TodoListViewController: UITableViewController {
 }
 
 // MARK: - SearchBar
-//extension TodoListViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        let request: NSFetchRequest<Item> = Item.fetchRequest()
-//        //created a predicate which specifies how we want to query our database
-//        //this line of code adds the query to the request
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//        //sort the data that comes back from the database any order we want
-//        //add the sortDescriptor to the request
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//        //run the request and fetch the results
-//        loadItems(with: request, predicate: predicate)
-//    }
-//
-//    //
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//            DispatchQueue.main.async {
-//                //this line of code refers to is that is should no longer be the things that is currently selected,so no longer have the cursor and also the keyboard should go away because we are no longer editing it anymore
-//                    //Go back to the background, go to the original state you're in before you are activated
-//                searchBar.resignFirstResponder()
-//            }
-//        }
-//    }
-//}
+
+extension TodoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
