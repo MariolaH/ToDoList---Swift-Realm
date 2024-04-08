@@ -10,12 +10,26 @@ import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    let realm = try! Realm()
+    lazy var realm = try! Realm()
     var categories: Results<Category>?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        do {
+            // Perform migration if needed
+            let config = Realm.Configuration(schemaVersion: 10, migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 1 {
+                    migration.enumerateObjects(ofType: Item.className()) { oldObject, newObject in
+                        newObject!["dateCreated"] = Date()
+                    }
+                }
+            })
+            Realm.Configuration.defaultConfiguration = config
+            realm = try Realm()
+        } catch {
+            print("Error initializing Realm: \(error)")
+        }
         loadCategories()
     }
     
