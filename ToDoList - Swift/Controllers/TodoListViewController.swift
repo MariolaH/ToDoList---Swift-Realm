@@ -7,11 +7,13 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class TodoListViewController: SwipeTableViewController {
     
     var todoItems: Results<Item>?
-    var realm = try! Realm()
+    lazy var realm = try! Realm()
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory: Category? {
         //everthing in the didSet {} is going to happen as soon as selected category gets set with a value
@@ -23,8 +25,35 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        title = "To Do List"
+        tableView.separatorStyle = .none
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        //if this, selectedCategory?.color, is not nil then proceed with the method, navigationController?.navigationBar..
+        if let colorHex = selectedCategory?.color {
+            title = selectedCategory!.name
+            guard let navBar = navigationController?.navigationBar else {
+                fatalError("Navigation controller does not exist")
+            }
+            
+            if let navBarColor = UIColor(hexString: colorHex) {
+                navBar.backgroundColor = navBarColor
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                searchBar.barTintColor = navBarColor
+            }
+            searchBar.tintColor = UIColor.black
+            
+            if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+                textField.backgroundColor = .white
+            }
+            
+            
+        }
+    }
+    
+    func position(for bar: UIBarPositioning) -> UIBarPosition {
+     return .topAttached
     }
     
     //MARK: - Tableview Datasource Methods
@@ -44,6 +73,13 @@ class TodoListViewController: SwipeTableViewController {
         // Set the textLabel of the cell to the item
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
+            //            print("Version 1: \(CGFloat(indexPath.row / todoItems!.count))")
+            //            print("Version 2: \(CGFloat(indexPath.row) / CGFloat(todoItems!.count))")
+            //            print("____________________")
             
             //value = condition ? valueIfTrue : valueIfFalse
             cell.accessoryType = item.done ? .checkmark : .none
@@ -138,14 +174,14 @@ class TodoListViewController: SwipeTableViewController {
 // MARK: - SearchBar
 
 extension TodoListViewController: UISearchBarDelegate {
-
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         
         tableView.reloadData()
     }
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()
