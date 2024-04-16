@@ -34,6 +34,16 @@ class CategoryViewController: SwipeTableViewController {
         }
         loadCategories()
         tableView.separatorStyle = .none
+        title = "To Do List"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation does not exist")
+        }
+        navBar.backgroundColor = .white
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
     }
     
     //MARK: - TableView Datasource Methods
@@ -45,10 +55,13 @@ class CategoryViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
-        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "2ecc71")
-        
-        
+        //This line unwraps an optional category from the categories array at the specified indexPath.row. If categories is not nil and contains a valid category at the given index, the if block is executed.
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name
+            guard let categoryColor = UIColor(hexString: category.color) else {fatalError()}
+                cell.backgroundColor = categoryColor
+                cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+        }
         return cell
     }
     
