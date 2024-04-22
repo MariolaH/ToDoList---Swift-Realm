@@ -52,9 +52,6 @@ class TodoListViewController: SwipeTableViewController {
         }
     }
     
-    func position(for bar: UIBarPositioning) -> UIBarPosition {
-     return .topAttached
-    }
     
     //MARK: - Tableview Datasource Methods
     

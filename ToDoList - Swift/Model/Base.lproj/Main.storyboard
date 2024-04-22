@@ -32,7 +32,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="1Zw-fT-bmI">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="gKs-Pl-AK0">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="RnY-Jp-kI8" id="0a0-wb-8xL"/>
                             </connections>
